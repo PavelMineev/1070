@@ -1,7 +1,5 @@
-# Import the Images module from pillow
 from PIL import Image
 
-# Open the image by specifying the image path.
 image_path = "img.png"
 image = Image.open(image_path)
 
