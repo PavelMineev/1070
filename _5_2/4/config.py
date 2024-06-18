@@ -1,2 +1,1 @@
-DATABASE = 'database.db'
 TOKEN = ''

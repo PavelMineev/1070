@@ -1,6 +1,8 @@
 import random
 import discord
 
+from ui_get_answer import GetAnswerView
+
 
 class Game:
 
@@ -8,8 +10,26 @@ class Game:
         self.started = False
         self.number_of_teams = 2
         self.teams = []
-        self.players = []
-        pass
+        self.players = {}
+        self.info_message = None
+
+    async def update_info_message(self):
+        message_text = ""
+
+        if self.info_message:
+
+            for team in self.teams:
+                message_text += f"```Команда {self.teams.index(team) + 1}\n"
+                team = sorted(list(team.values()), key=lambda player: player.score)
+
+                for player_number in range(len(team)):
+                    player = team[player_number]
+                    message_text += f"\n{player_number + 1}\t{player.score}\t {player.user.name}"
+
+                message_text += "```"
+
+            message_text += "\nВыбери команду:"
+            await self.info_message.edit(content=message_text)
 
 
 class Player:
@@ -60,7 +80,7 @@ class Player:
                     self.questions.pop(0)
                     self.opened_parts.clear()
                     await self.user.send("Верно", delete_after=delete_delay)
-                    self.score += 50 * len()
+                    self.score += 50 * len(self.opened_words)
                 else:
                     await self.user.send("Неверно", delete_after=delete_delay)
 
@@ -68,11 +88,13 @@ class Player:
                 await self.update_info_message(self.questions[0][0][0])
 
         else:
-            await self.update_info_message("Ты прошел игру!")
+            await self.update_info_message("Ты прошел игру!", buttons=False)
 
-    async def update_info_message(self, text=""):
+    async def update_info_message(self, text="", buttons=True):
+        view = GetAnswerView(self) if buttons else None
         info = (f"Твои очки: {self.score}\n"
                 f"Найденные фрагменты: {' '.join(self.opened_parts)}\n"
                 f"Разгаданные слова: {' '.join(self.opened_words)}\n")
 
-        await self.info_message.edit(content=info + text)
+        await self.info_message.edit(content=info + text, view=view)
+        await self.game.update_info_message()

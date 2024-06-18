@@ -15,12 +15,13 @@ class JoinTeamButton(Button):
     async def callback(self, interaction: Interaction) -> Any:
         user = interaction.user
         print(self.team_number)
-        await interaction.user.send(f"Вы присоединились к команде {self.team_number + 1}", delete_after=300)
+        await interaction.user.send(f"Вы присоединились к команде {self.team_number + 1}", delete_after=30)
         player = Player(user=interaction.user,
                         game=self.view.game,
                         team_number=self.team_number,
                         info_message=await interaction.user.send("Подключение к игре..."))
         await player.update_info_message(player.questions[0][0][0])
+        await self.view.game.update_info_message()
 
         if not interaction.response.is_done():
             await interaction.response.defer()
