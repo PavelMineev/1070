@@ -3,6 +3,7 @@ import numpy as np
 import random
 
 def generate_captcha(width, height, length):
+
     # Генерируем случайную строку для капчи
     captcha_text = ''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k=length))
     # captcha_text = "hello"
@@ -41,11 +42,11 @@ def generate_captcha(width, height, length):
     return captcha_text
 
 # Задаем размерность капчи
-width = 200
-height = 80
+captcha_width = 200
+captcha_height = 80
 
 # Задаем длину текста на капче
-length = 6
+captcha_length = 6
 
-captcha_text = generate_captcha(width, height, length)
+captcha_text = generate_captcha(captcha_width, captcha_height, captcha_length)
 print('Captcha text:', captcha_text)
